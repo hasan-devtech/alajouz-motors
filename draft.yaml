@@ -114,7 +114,6 @@ models:
     user_id: id foreign
     checked_in: timestamp nullable
     checked_out: timestamp nullable
-    status: enum:placeholder
     notes: text
 
 seeders: Brand, BrandModel, Color, Car

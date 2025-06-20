@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OTPTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,9 @@ class OTP extends Model
     {
         return [
             'id' => 'integer',
+            'code' => 'hashed',
+            'request_code' => 'hashed',
+            'type' => OTPTypeEnum::class,
         ];
     }
 }

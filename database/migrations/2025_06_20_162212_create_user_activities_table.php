@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained();
             $table->timestamp('checked_in')->nullable();
             $table->timestamp('checked_out')->nullable();
-            $table->enum('status', ["placeholder"]);
             $table->text('notes');
             $table->timestamps();
         });

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethodEnum;
+use App\Enums\RequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,7 +24,9 @@ class Payment extends Model
         return [
             'id' => 'integer',
             'amount' => 'decimal:2',
-            'payment_date' => 'timestamp',
+            'payment_date' => 'datetime',
+            'method' => PaymentMethodEnum::class,
+            'status' => RequestStatusEnum::class,
         ];
     }
 }

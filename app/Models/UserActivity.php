@@ -14,7 +14,6 @@ class UserActivity extends Model
         'user_id',
         'checked_in',
         'checked_out',
-        'status',
         'notes',
     ];
 
@@ -23,8 +22,8 @@ class UserActivity extends Model
         return [
             'id' => 'integer',
             'user_id' => 'integer',
-            'checked_in' => 'timestamp',
-            'checked_out' => 'timestamp',
+            'checked_in' => 'datetime',
+            'checked_out' => 'datetime',
         ];
     }
 

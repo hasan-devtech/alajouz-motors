@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\CarEngineTypeEnum;
+use App\Enums\CarStatusEnum;
+use App\Enums\CarTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,15 +37,18 @@ class Car extends Model
             'brand_id' => 'integer',
             'brand_model_id' => 'integer',
             'color_id' => 'integer',
-            'year' => 'timestamp',
+            'year' => 'integer',
             'distance' => 'decimal:2',
             'price' => 'decimal:2',
+            'engine_type' => CarEngineTypeEnum::class,
+            'type' => CarTypeEnum::class,
+            'status' => CarStatusEnum::class,
         ];
     }
 
-    public function customers(): BelongsToMany
+    public function favorites(): BelongsToMany
     {
-        return $this->belongsToMany(Customer::class);
+        return $this->belongsToMany(Customer::class, 'favorites');
     }
 
     public function images(): MorphMany

@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class Customer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use
+        HasFactory,
+        SoftDeletes,
+        HasApiTokens;
 
     protected $fillable = [
         'name',
@@ -27,6 +31,7 @@ class Customer extends Model
     {
         return [
             'id' => 'integer',
+            'password' => 'hashed'
         ];
     }
 
@@ -50,9 +55,9 @@ class Customer extends Model
         return $this->hasMany(Booking::class);
     }
 
-    public function cars(): BelongsToMany
+    public function favorites(): BelongsToMany
     {
-        return $this->belongsToMany(Car::class);
+        return $this->belongsToMany(Car::class, 'favorites');
     }
 
     public function image(): MorphOne

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,7 +27,8 @@ class Booking extends Model
             'customer_id' => 'integer',
             'car_id' => 'integer',
             'amount' => 'decimal:2',
-            'visit_date' => 'timestamp',
+            'visit_date' => 'datetime',
+            'status' => RequestStatusEnum::class,
         ];
     }
 

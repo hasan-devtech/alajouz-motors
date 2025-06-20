@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\CarEngineTypeEnum;
+use App\Enums\RequestStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,14 +17,14 @@ return new class extends Migration {
             $table->foreignId('brand_model_id')->constrained();
             $table->foreignId('customer_id')->constrained();
             $table->foreignId('color_id')->constrained();
-            $table->timestamp('year')->nullable();
+            $table->smallInteger('year', false, true);
             $table->decimal('distance', 8, 2);
             $table->integer('engine', false, true);
-            $table->enum('engine_type', ["placeholder"]);
+            $table->enum('engine_type', enumValues(CarEngineTypeEnum::class));
             $table->decimal('price', 8, 2);
             $table->decimal('price_after_commission', 8, 2);
             $table->string('vin');
-            $table->enum('status', ["placeholder"]);
+            $table->enum('status', enumValues(RequestStatusEnum::class));
             $table->timestamps();
             $table->softDeletes();
         });

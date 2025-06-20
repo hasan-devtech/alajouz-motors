@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,10 +36,11 @@ class SellingRequest extends Model
             'brand_model_id' => 'integer',
             'customer_id' => 'integer',
             'color_id' => 'integer',
-            'year' => 'timestamp',
+            'year' => 'integer',
             'distance' => 'decimal:2',
             'price' => 'decimal:2',
             'price_after_commission' => 'decimal:2',
+            'status' => RequestStatusEnum::class,
         ];
     }
 

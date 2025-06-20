@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RequestStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration {
             $table->foreignId('car_id')->constrained();
             $table->decimal('amount', 8, 2);
             $table->timestamp('visit_date')->nullable();
-            $table->enum('status', ["placeholder"]);
+            $table->enum('status', enumValues(RequestStatusEnum::class));
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RequestStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,9 +28,10 @@ class Renting extends Model
             'id' => 'integer',
             'customer_id' => 'integer',
             'car_id' => 'integer',
-            'start_date' => 'timestamp',
-            'end_date' => 'timestamp',
+            'start_date' => 'date',
+            'end_date' => 'date',
             'total_price' => 'decimal:2',
+            'status' => RequestStatusEnum::class,
         ];
     }
 

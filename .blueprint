@@ -1,0 +1,59 @@
+created:
+    - database/factories/BrandFactory.php
+    - database/factories/BrandModelFactory.php
+    - database/factories/ColorFactory.php
+    - database/factories/CarFactory.php
+    - database/factories/CustomerFactory.php
+    - database/factories/RateFactory.php
+    - database/factories/RentingFactory.php
+    - database/factories/BookingFactory.php
+    - database/factories/SellingRequestFactory.php
+    - database/factories/ImageFactory.php
+    - database/factories/OTPFactory.php
+    - database/factories/PaymentFactory.php
+    - database/factories/UserActivityFactory.php
+    - database/migrations/2025_06_20_162200_create_brands_table.php
+    - database/migrations/2025_06_20_162201_create_brand_models_table.php
+    - database/migrations/2025_06_20_162202_create_colors_table.php
+    - database/migrations/2025_06_20_162203_create_cars_table.php
+    - database/migrations/2025_06_20_162204_create_customers_table.php
+    - database/migrations/2025_06_20_162205_create_rates_table.php
+    - database/migrations/2025_06_20_162206_create_rentings_table.php
+    - database/migrations/2025_06_20_162207_create_bookings_table.php
+    - database/migrations/2025_06_20_162208_create_selling_requests_table.php
+    - database/migrations/2025_06_20_162209_create_images_table.php
+    - database/migrations/2025_06_20_162210_create_o_t_p_s_table.php
+    - database/migrations/2025_06_20_162211_create_payments_table.php
+    - database/migrations/2025_06_20_162212_create_user_activities_table.php
+    - database/migrations/2025_06_20_162213_create_car_customer_table.php
+    - app/Models/Brand.php
+    - app/Models/BrandModel.php
+    - app/Models/Color.php
+    - app/Models/Car.php
+    - app/Models/Customer.php
+    - app/Models/Rate.php
+    - app/Models/Renting.php
+    - app/Models/Booking.php
+    - app/Models/SellingRequest.php
+    - app/Models/Image.php
+    - app/Models/OTP.php
+    - app/Models/Payment.php
+    - app/Models/UserActivity.php
+    - database/seeders/BrandSeeder.php
+    - database/seeders/BrandModelSeeder.php
+    - database/seeders/ColorSeeder.php
+    - database/seeders/CarSeeder.php
+models:
+    Brand: { name: 'string:127', slug: 'string unique', softdeletes: softDeletes, relationships: { hasMany: 'BrandModel, Car, SellingRequest', morphOne: Image } }
+    BrandModel: { brand_id: 'id foreign', name: 'string:127', slug: 'string unique', softdeletes: softDeletes, relationships: { hasMany: 'Car, SellingRequest', morphOne: Image } }
+    Color: { name: 'string:127', relationships: { hasMany: 'Car, SellingRequest' } }
+    Car: { brand_id: 'id foreign', brand_model_id: 'id foreign', color_id: 'id foreign', year: 'timestamp nullable', distance: 'decimal:8,2', engine: 'integer:false,true', engine_type: 'enum:placeholder', price: 'decimal:8,2', vin: string, type: 'enum:placeholder', status: 'enum:placeholder', softdeletes: softDeletes, relationships: { belongsToMany: Customer, morphMany: Image } }
+    Customer: { name: string, phone: 'char:15', password: string, softdeletes: softDeletes, relationships: { hasMany: 'SellingRequest, Rate, Renting, Booking', belongsToMany: Car, morphOne: Image } }
+    Rate: { customer_id: 'id foreign', car_id: 'id foreign', renting_id: 'id foreign', rate: 'smallInteger:false,true', comment: text }
+    Renting: { customer_id: 'id foreign', car_id: 'id foreign', start_date: 'timestamp nullable', end_date: 'timestamp nullable', total_price: 'decimal:8,2', status: 'enum:placeholder', license: string, softdeletes: softDeletes }
+    Booking: { customer_id: 'id foreign', car_id: 'id foreign', amount: 'decimal:8,2', visit_date: 'timestamp nullable', status: 'enum:placeholder', softdeletes: softDeletes }
+    SellingRequest: { brand_id: 'id foreign', brand_model_id: 'id foreign', customer_id: 'id foreign', color_id: 'id foreign', year: 'timestamp nullable', distance: 'decimal:8,2', engine: 'integer:false,true', engine_type: 'enum:placeholder', price: 'decimal:8,2', price_after_commission: 'decimal:8,2', vin: string, status: 'enum:placeholder', softdeletes: softDeletes, relationships: { morphMany: Image } }
+    Image: { path: string, alt: string, softdeletes: softDeletes, relationships: { morphTo: Imageable } }
+    OTP: { code: string, request_code: string, phone: string, type: 'enum:placeholder' }
+    Payment: { method: 'enum:placeholder', amount: 'decimal:8,2', payment_date: 'timestamp nullable', status: 'enum:placeholder', softdeletes: softDeletes }
+    UserActivity: { user_id: 'id foreign', checked_in: 'timestamp nullable', checked_out: 'timestamp nullable', status: 'enum:placeholder', notes: text }

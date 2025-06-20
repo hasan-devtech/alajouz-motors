@@ -1,2 +1,120 @@
 models:
-  
+  Brand:
+    name: string:127
+    slug: string unique
+    softDeletes: true
+    relationships:
+      hasMany: BrandModel, Car, SellingRequest
+      morphOne: Image
+
+  BrandModel:
+    brand_id: id foreign
+    name: string:127
+    slug: string unique
+    softDeletes: true
+    relationships:
+      hasMany: Car, SellingRequest
+      morphOne: Image
+
+  Color:
+    name: string:127
+    relationships:
+      hasMany: Car, SellingRequest
+
+  Car:
+    brand_id: id foreign
+    brand_model_id: id foreign
+    color_id: id foreign
+    year: timestamp nullable
+    distance: decimal:8,2
+    engine: integer:false,true
+    engine_type: enum:placeholder
+    price: decimal:8,2
+    vin: string
+    type: enum:placeholder
+    status: enum:placeholder
+    softDeletes: true
+    relationships:
+      belongsToMany: Customer
+      morphMany: Image
+
+  Customer:
+    name: string
+    phone: char:15
+    password: string
+    softDeletes: true
+    relationships:
+      hasMany: SellingRequest, Rate, Renting, Booking
+      belongsToMany: Car
+      morphOne: Image
+
+  Rate:
+    customer_id: id foreign
+    car_id: id foreign
+    renting_id: id foreign
+    rate: smallInteger:false,true
+    comment: text
+
+  Renting:
+    customer_id: id foreign
+    car_id: id foreign
+    start_date: timestamp nullable
+    end_date: timestamp nullable
+    total_price: decimal:8,2
+    status: enum:placeholder
+    license: string
+    softDeletes: true
+
+  Booking:
+    customer_id: id foreign
+    car_id: id foreign
+    amount: decimal:8,2
+    visit_date: timestamp nullable
+    status: enum:placeholder
+    softDeletes: true
+
+  SellingRequest:
+    brand_id: id foreign
+    brand_model_id: id foreign
+    customer_id: id foreign
+    color_id: id foreign
+    year: timestamp nullable
+    distance: decimal:8,2
+    engine: integer:false,true
+    engine_type: enum:placeholder
+    price: decimal:8,2
+    price_after_commission: decimal:8,2
+    vin: string
+    status: enum:placeholder
+    softDeletes: true
+    relationships:
+      morphMany: Image
+
+  Image:
+    path: string
+    alt: string
+    softDeletes: true
+    relationships:
+      morphTo: Imageable
+
+  OTP:
+    code: string
+    request_code: string
+    phone: string
+    type: enum:placeholder
+
+  Payment:
+    method: enum:placeholder
+    amount: decimal:8,2
+    payment_date: timestamp nullable
+    status: enum:placeholder
+    softDeletes: true
+
+  UserActivity:
+    user_id: id foreign
+    checked_in: timestamp nullable
+    checked_out: timestamp nullable
+    status: enum:placeholder
+    notes: text
+
+seeders: Brand, BrandModel, Color, Car

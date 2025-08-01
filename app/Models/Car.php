@@ -70,4 +70,18 @@ class Car extends Model
     {
         return $this->belongsTo(Color::class);
     }
+    public function scopeFilter($query, array $filters)
+    {
+        return $query
+            ->when($filters['brand_id'] ?? null, fn($q, $v) => $q->where('brand_id', $v))
+            ->when($filters['brand_model_id'] ?? null, fn($q, $v) => $q->where('brand_model_id', $v))
+            ->when($filters['color_id'] ?? null, fn($q, $v) => $q->where('color_id', $v))
+            ->when($filters['year'] ?? null, fn($q, $v) => $q->where('year', $v))
+            ->when($filters['min_price'] ?? null, fn($q, $v) => $q->where('price', '>=', $v))
+            ->when($filters['max_price'] ?? null, fn($q, $v) => $q->where('price', '<=', $v))
+            ->when($filters['engine'] ?? null, fn($q, $v) => $q->where('engine', $v))
+            ->when($filters['engine_type'] ?? null, fn($q, $v) => $q->where('engine_type', $v))
+            ->when($filters['status'] ?? null, fn($q, $v) => $q->where('status', $v))
+            ->when($filters['car_type'] ?? null, fn($q, $v) => $q->where('type', $v));
+    }
 }

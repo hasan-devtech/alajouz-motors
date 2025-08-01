@@ -13,7 +13,9 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->char('phone', 15)->index();
+            $table->string('email');
             $table->string('password');
+            $table->boolean("is_verified")->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

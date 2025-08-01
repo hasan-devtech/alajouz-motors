@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserStatusEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,5 +48,9 @@ class User extends Authenticatable implements FilamentUser
             'salary' => 'integer',
             'password' => 'hashed',
         ];
+    }
+    public function canLogin()
+    {
+        return $this->status === UserStatusEnum::Active;
     }
 }

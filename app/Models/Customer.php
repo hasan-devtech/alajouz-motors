@@ -20,7 +20,9 @@ class Customer extends Model
     protected $fillable = [
         'name',
         'phone',
+        'email',
         'password',
+        'is_verified'
     ];
 
     protected $hidden = [
@@ -33,6 +35,10 @@ class Customer extends Model
             'id' => 'integer',
             'password' => 'hashed'
         ];
+    }
+    public function canLogin()
+    {
+        return $this->is_verified;
     }
 
     public function sellingRequests(): HasMany

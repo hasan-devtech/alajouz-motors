@@ -12,4 +12,7 @@ class SellingRequestController extends Controller
     public function __construct(private SellingRequestService $service)
     {
     }
+    public function create(){
+        
+    }
 }

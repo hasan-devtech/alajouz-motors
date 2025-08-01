@@ -13,6 +13,11 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'sms' => [
+        'gateway_url' => env('SMS_GATEWAY_URL', 'https://www.traccar.org/sms'),
+        'token' => env('SMS_GATEWAY_TOKEN'),
+    ],
+
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

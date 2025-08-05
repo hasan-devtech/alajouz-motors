@@ -23,7 +23,7 @@ class OTPService
         ]);
         $message = "Your OTP is: " . $code;
         $isSent = $this->send($phone, $message);
-        return $is_sent
+        return $isSent
             ? ['status' => true, 'request_code' => $otp->request_code]
             : ['status' => false, 'message' => 'SMS failed', 'code' => 500];
     }

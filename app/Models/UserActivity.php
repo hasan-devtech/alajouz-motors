@@ -12,9 +12,13 @@ class UserActivity extends Model
 
     protected $fillable = [
         'user_id',
-        'checked_in',
-        'checked_out',
-        'notes',
+        'device_id',
+        'ip',
+        'latitude',
+        'longitude',
+        'checked_in_at',
+        'checked_out_at'
+
     ];
 
     protected function casts(): array
@@ -30,5 +34,12 @@ class UserActivity extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    public function getWorkHoursAttribute()
+    {
+        if ($this->checked_out_at) {
+            return $this->checked_out_at->diffInHours($this->checked_in_at);
+        }
+        return null;
     }
 }

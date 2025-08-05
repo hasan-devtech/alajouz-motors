@@ -30,10 +30,15 @@ class SellingCarRequest extends FormRequest
             'brand_id' => 'required|exists:brands,id',
             'brand_model_id' => ['required', 'exists:brand_models,id', new BrandModelBelongsToBrand($this->input('brand_id'))],
             'color_id' => 'required|exists:colors,id',
-            'year' => 'required|integer|min:2000|max:' . now()->year,
+            'year' => 'required|integer|min:1990|max:' . now()->year,
+            'distance' => ['required', 'numeric', 'min:0'],
             'engine' => 'required|integer|min:0',
             'engine_type' => ['required', Rule::in(enumValues(CarEngineTypeEnum::class))],
             'car_type' => ['required', Rule::in(enumValues(CarTypeEnum::class))],
+            'price' => 'required|numeric|min:200',
+            'vin' => 'required|string|max:255',
+            'car_images' => 'required|array|min:1',
+            'car_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ];
     }
 }

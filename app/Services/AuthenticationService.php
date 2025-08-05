@@ -29,7 +29,7 @@ class AuthenticationService
         ]);
         return $this->otpService->sendOTP($data['phone'], OTPTypeEnum::Register);
     }
-
+    
     public function login($credentials, $model)
     {
         $user = $this->getByPhone($credentials['phone'], $model);
@@ -48,21 +48,6 @@ class AuthenticationService
         return [
             'status' => true,
             'user' => $user,
-        ];
-    }
-    public function resendVerificationCode($phone, $model, $type)
-    {
-        $user = $this->getByPhone($phone, $model);
-        if (!$user) {
-            return [
-                'status' => false,
-                'message' => 'Phone number not found',
-            ];
-        }
-        $otp = $this->otpService->sendOTP($phone, $type);
-        return [
-            'status' => true,
-            'request_code' => $otp["request_code"],
         ];
     }
 
@@ -86,10 +71,10 @@ class AuthenticationService
             ->first();
     }
 
-    public static function getByPhone($phone, $model)
+    private  function getByPhone($phone, $model)
     {
         return $model::where('phone', $phone)->first();
     }
-
+    
 
 }

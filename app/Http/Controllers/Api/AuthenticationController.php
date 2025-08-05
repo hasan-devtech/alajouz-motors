@@ -9,6 +9,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\UserResource;
 use App\Models\Customer;
 use App\Models\User;
 use App\Services\AuthenticationService;
@@ -39,6 +40,16 @@ class AuthenticationController extends Controller
     public function loginUser(LoginRequest $request)
     {
         return $this->login($request, User::class, 'user', UserResource::class);
+    }
+
+    public function logoutUser(){
+        request()->user('user-api')->currentAccessToken()->delete();
+        return sendResponseHelper(msg:"logout successfully");
+    }
+
+        public function logoutCustomer(){
+        request()->user('customer-api')->currentAccessToken()->delete();
+        return sendResponseHelper(msg:"logout successfully");
     }
 
     private function login(Request $request, $model, $resourceKey, $resourceClass)
@@ -72,7 +83,7 @@ class AuthenticationController extends Controller
     public function resendVerificationCode(Request $request)
     {
         $validated = $request->validate([
-            'phone' => ['string', 'max:15', 'required'],
+            'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/' ,'string'],
             'otp_type' => ['required', Rule::in(enumValues(OTPTypeEnum::class))]
         ]);
         $otpType = OTPTypeEnum::from($validated['otp_type']);

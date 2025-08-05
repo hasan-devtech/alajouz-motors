@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\OTPTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class VerifyOtpRequest extends FormRequest
+class UserCheckInRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +22,9 @@ class VerifyOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/' ,'string'],
-            'otp' => 'required|string|max:10',
-
+            'device_id' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric'
         ];
     }
 }

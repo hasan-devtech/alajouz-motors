@@ -1,6 +1,8 @@
 <?php
 
 const PAGINATION = [10, 15, 50, 100];
+const ALAJOUZ_LATITUDE = 33.532436;
+const ALAJOUZ_LONGITUDE = 36.228012;
 
 function enumValues(string $enum)
 {

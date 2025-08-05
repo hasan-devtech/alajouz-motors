@@ -51,6 +51,6 @@ class User extends Authenticatable implements FilamentUser
     }
     public function canLogin()
     {
-        return $this->status === UserStatusEnum::Active;
+        return $this->status === UserStatusEnum::Active->value;
     }
 }

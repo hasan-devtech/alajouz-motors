@@ -12,9 +12,13 @@ return new class extends Migration {
         Schema::create('user_activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->timestamp('checked_in')->nullable();
+            $table->string('device_id');
+            $table->string('ip');
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->timestamp('checked_in');
             $table->timestamp('checked_out')->nullable();
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
 

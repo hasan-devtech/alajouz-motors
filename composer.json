@@ -45,7 +45,8 @@
             "app/Helpers/UtilHelper.php",
             "app/Helpers/ResponseHelper.php",
             "app/Helpers/PaginationResponseHelper.php",
-            "app/Helpers/PaginationHelper.php"  
+            "app/Helpers/PaginationHelper.php"  ,
+            "app/Helpers/CalculateDistanceHelper.php"
         ]
     },
     "autoload-dev": {

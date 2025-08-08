@@ -43,6 +43,14 @@ class SellingRequest extends Model
             'status' => RequestStatusEnum::class,
         ];
     }
+    public function isPending()
+    {
+        return $this->status === RequestStatusEnum::Pending->value;
+    }
+        public function isCancelled()
+    {
+        return $this->status === RequestStatusEnum::Cancelled->value;
+    }
 
     public function images(): MorphMany
     {

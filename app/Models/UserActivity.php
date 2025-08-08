@@ -16,8 +16,8 @@ class UserActivity extends Model
         'ip',
         'latitude',
         'longitude',
-        'checked_in_at',
-        'checked_out_at'
+        'checked_in',
+        'checked_out'
 
     ];
 
@@ -37,8 +37,8 @@ class UserActivity extends Model
     }
     public function getWorkHoursAttribute()
     {
-        if ($this->checked_out_at) {
-            return $this->checked_out_at->diffInHours($this->checked_in_at);
+        if ($this->checked_out) {
+            return $this->checked_out->diffInHours($this->checked_in);
         }
         return null;
     }

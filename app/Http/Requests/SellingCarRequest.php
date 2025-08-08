@@ -26,7 +26,7 @@ class SellingCarRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'brand_id' => 'required|exists:brands,id',
             'brand_model_id' => ['required', 'exists:brand_models,id', new BrandModelBelongsToBrand($this->input('brand_id'))],
             'color_id' => 'required|exists:colors,id',
@@ -40,5 +40,16 @@ class SellingCarRequest extends FormRequest
             'car_images' => 'required|array|min:1',
             'car_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ];
+        if ($this->isMethod('PUT')) {
+            foreach ($rules as $field => $rule) {
+                $rules[$field] = 'sometimes|' . $rule;
+            }
+            $rules['selling_request_id'] = [
+                'required',
+                'integer',
+                Rule::exists('selling_requests', 'id')->where('customer_id', $this->user()->id)
+            ];
+        }
+        return $rules;
     }
 }

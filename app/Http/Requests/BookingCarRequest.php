@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class BookingCarRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,6 +14,7 @@ class RegisterRequest extends FormRequest
         return true;
     }
 
+    protected $minAmount = setting('min_amount'); 
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,14 +23,9 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:127',
-            'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/' ,'string'],
-            'email' => 'required|email|max:127',
-            'password' => [
-                'required',
-                'confirmed',
-                Password::min(8)->mixedCase()
-            ],
+            'car_id' => 'required',
+            'amount' => ['required','min:$minAmount' ,'integer'],
+            
         ];
     }
 }

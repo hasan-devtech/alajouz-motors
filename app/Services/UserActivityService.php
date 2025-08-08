@@ -9,19 +9,22 @@ class UserActivityService
 {
     public function checkIn($ip, $device_id, $latitude, $longitude, $user_id)
     {
+        $now = now()->setTimezone(setting('timezone'));
         $isChecked = UserActivity::where('user_id', $user_id)
-            ->whereDate('checked_in', now()->toDateString())->exists();
+            ->whereDate('checked_in', $now->toDateString())
+            ->exists();
         if ($isChecked) {
             return [
                 'status' => false,
                 'message' => 'User already checked_in  the system'
             ];
         }
-        $distance = haversine($latitude, $longitude, ALAJOUZ_LATITUDE, ALAJOUZ_LONGITUDE);
-        if ($distance > 0.2) {
+        $maxDistance = (float) setting('checkin_max_distance');
+        $distance = haversine($latitude, $longitude, setting('company_latitude'), setting('company_longitude'));
+        if ($distance > $maxDistance) {
             return [
                 'status' => false,
-                'message' => "u are too far to check"
+                'message' => "You are too far from the allowed check-in area"
             ];
         }
         UserActivity::create([
@@ -30,12 +33,39 @@ class UserActivityService
             'ip' => $ip,
             'latitude' => $latitude,
             'longitude' => $longitude,
-            //maybe will set the timezone if the server in another country
-            'checked_in' => now()
+            'checked_in' => $now
         ]);
         return [
             'status' => true,
-            'message' => 'checked_in successfully'
+            'message' => 'checked_in successfully',
+            'checked_in_at' => $now->toDateTimeString()
+        ];
+    }
+
+    public function checkOut($user_id)
+    {
+        $now = now()->setTimezone(setting('timezone'));
+        $today = $now->toDateString();
+        $activity = UserActivity::where('user_id', $user_id)
+            ->whereDate('checked_in', $today)
+            ->first();
+        if (!$activity) {
+            return [
+                'status' => false,
+                'message' => 'u are not checked_in'
+            ];
+        }
+        if ($activity->checked_out !== null) {
+            return [
+                'status' => false,
+                'message' => 'u have already checked out'
+            ];
+        }
+        $activity->update(['checked_out' => $now]);
+        return [
+            'status' => true,
+            'message' => 'checked_out successfully',
+            'checked_out_at' => $now->toDateTimeString()
         ];
     }
 }

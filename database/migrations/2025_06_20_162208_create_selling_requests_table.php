@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->integer('engine', false, true);
             $table->enum('engine_type', enumValues(CarEngineTypeEnum::class));
             $table->decimal('price', 8, 2);
-            $table->decimal('price_after_commission', 8, 2);
+            $table->decimal('price_after_commission', 8, 2)->nullable();
             $table->string('vin');
             $table->enum('status', enumValues(RequestStatusEnum::class))->default(RequestStatusEnum::Pending);
             $table->timestamps();

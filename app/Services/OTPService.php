@@ -15,7 +15,7 @@ class OTPService
     {
         $code = $this->generateCode();
         $requestCode = Str::uuid();
-        $otp = OTP::create(attributes: [
+        OTP::create(attributes: [
             'code' => $code,
             'request_code' => $requestCode,
             'phone' => $phone,
@@ -24,7 +24,7 @@ class OTPService
         $message = "Your OTP is: " . $code;
         $isSent = $this->send($phone, $message);
         return $isSent
-            ? ['status' => true, 'request_code' => $otp->request_code]
+            ? ['status' => true , 'message' => 'otp has been send successfully']
             : ['status' => false, 'message' => 'SMS failed', 'code' => 500];
     }
     private static function generateCode()

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class RegisterRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +23,10 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:127',
             'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/' ,'string'],
-            'email' => 'required|email|max:127',
-            'password' => [
+            'otp' => 'required|string|max:10',
+            'new_password' => [
                 'required',
-                'confirmed',
                 Password::min(8)->mixedCase()
             ],
         ];

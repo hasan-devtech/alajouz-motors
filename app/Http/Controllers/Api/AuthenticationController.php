@@ -4,93 +4,109 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\OTPTypeEnum;
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\UserResource;
-use App\Models\Customer;
-use App\Models\User;
+use App\Models\Customer;    
 use App\Services\AuthenticationService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+
+use function App\Helpers\getModelsFromRoute;
 use function App\Helpers\sendResponseHelper;
 
 class AuthenticationController extends Controller
 {
-
     public function __construct(private AuthenticationService $service)
     {
     }
+
     public function register(RegisterRequest $request)
     {
-        $result = $this->service->register($request->validated());
-        if (!$result['status']) {
-            return sendResponseHelper($result['code'], $result['message']);
-        }
-        return sendResponseHelper(201, data: ['request_code' => $result['request_code']]);
+        $result = $this->service->handelRegister($request->validated());
+        return $result['status']
+            ? sendResponseHelper(201, "successfully registered and the otp has been sent to verify your account")
+            : sendResponseHelper($result['code'], $result['message']);
     }
 
-    public function loginCustomer(LoginRequest $request)
+    public function login(LoginRequest $request)
     {
-        return $this->login($request, Customer::class, 'customer', CustomerResource::class);
+        $model = getModelsFromRoute($request);
+        $resource = $model === Customer::class
+            ? CustomerResource::class
+            : UserResource::class;
+        $response = $this->service->handleLogin($request->validated(), $model, $resource);
+        return sendResponseHelper(
+            $response['status'] ? 200 : 401,
+            $response['message'],
+            $response['data'] ?? null
+        );
     }
 
-    public function loginUser(LoginRequest $request)
+
+    public function logout(Request $request)
     {
-        return $this->login($request, User::class, 'user', UserResource::class);
+        $guard = $request->routeIs('customer.*') ? 'customer-api' : 'user-api';
+        $request->user($guard)?->currentAccessToken()?->delete();
+        return sendResponseHelper(msg: 'Logged out successfully');
     }
 
-    public function logoutUser(){
-        request()->user('user-api')->currentAccessToken()->delete();
-        return sendResponseHelper(msg:"logout successfully");
-    }
-
-        public function logoutCustomer(){
-        request()->user('customer-api')->currentAccessToken()->delete();
-        return sendResponseHelper(msg:"logout successfully");
-    }
-
-    private function login(Request $request, $model, $resourceKey, $resourceClass)
+    public function forgetPassword(Request $request)
     {
-        $result = $this->service->login($request->validated(), $model);
-        if (!$result['status']) {
-            return sendResponseHelper(401, $result['message']);
-        }
-        $token = $result['user']->createToken('Ajous-Motor-Token')->plainTextToken;
-        return sendResponseHelper(data: [
-            $resourceKey => $resourceClass::make($result['user']),
-            'access_token' => $token,
+        $request->validate([
+            'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/', 'string', 'max:15'],
         ]);
+        $model = getModelsFromRoute($request);
+        $response = $this->service->handleForgetPassword($request->phone, $model);
+        return sendResponseHelper($response['status'] ? 200 : ($response['code'] ?? 400), $response['message']);
     }
 
     public function verifyRegisterCode(VerifyOtpRequest $request)
     {
-        $validated = $request->validated();
-        $result = $this->service->verifyOTP(
-            $validated['phone'],
-            $validated['otp'],
-            OTPTypeEnum::Register,
-            Customer::class
+        $response = $this->service->handleVerifyOTP(
+            $request->phone,
+            $request->otp,
+            Customer::class,
+            OTPTypeEnum::Register
         );
-        if (!$result) {
-            return sendResponseHelper(401, 'Invalid OTP or expired');
+        if (!$response['status']) {
+            return sendResponseHelper($response['code'] ?? 400, $response['message']);
         }
-        $result->update(['is_verified' => true]);
-        return sendResponseHelper(200, 'Verified successfully');
+        $response['user']->update(['is_verified' => 1]);
+        return sendResponseHelper(msg: $response['message']);
     }
-    public function resendVerificationCode(Request $request)
+
+
+    public function verifyPasswordRecoveryCode(VerifyOtpRequest $request)
     {
-        $validated = $request->validate([
-            'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/' ,'string'],
-            'otp_type' => ['required', Rule::in(enumValues(OTPTypeEnum::class))]
-        ]);
-        $otpType = OTPTypeEnum::from($validated['otp_type']);
-        $result = $this->service->otpService->sendOTP($validated['phone'], $otpType);
-        if (!$result['status']) {
-            return sendResponseHelper($result['code'], $result['message']);
+        $model = getModelsFromRoute($request);
+        $response = $this->service->handleVerifyOTP(
+            $request->phone,
+            $request->otp,
+            $model,
+            OTPTypeEnum::ResetPassword
+        );
+        return sendResponseHelper(
+            $response['status'] ? 200 : ($response['code'] ?? 400),
+            $response['message']
+        );
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $model = getModelsFromRoute($request);
+        $response = $this->service->handleVerifyOTP(
+            $request->phone,
+            $request->otp,
+            $model,
+            OTPTypeEnum::ResetPassword
+        );
+        if (!$response['status']) {
+            return sendResponseHelper($response['code'] ?? 400, $response['message']);
         }
-        return sendResponseHelper(201, data: ['request_code' => $result['request_code']]);
+        $response['user']->update(['password'=>$request->new_password]);
+        return sendResponseHelper(200, 'Password reset successfully');
     }
 }

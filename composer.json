@@ -16,6 +16,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "outerweb/filament-settings": "^1.3",
+        "outerweb/settings": "^1.1",
         "propaganistas/laravel-phone": "^6.0",
         "rennokki/laravel-eloquent-query-cache": "^3.6",
         "solution-forest/filament-simplelightbox": "^0.0.11",
@@ -46,7 +47,8 @@
             "app/Helpers/ResponseHelper.php",
             "app/Helpers/PaginationResponseHelper.php",
             "app/Helpers/PaginationHelper.php"  ,
-            "app/Helpers/CalculateDistanceHelper.php"
+            "app/Helpers/CalculateDistanceHelper.php",
+            "app/Helpers/ModelFromRouteHelper.php"
         ]
     },
     "autoload-dev": {

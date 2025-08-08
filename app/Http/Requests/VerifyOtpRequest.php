@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\OTPTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rule;
 
 class VerifyOtpRequest extends FormRequest
@@ -26,7 +27,6 @@ class VerifyOtpRequest extends FormRequest
         return [
             'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/' ,'string'],
             'otp' => 'required|string|max:10',
-
         ];
     }
 }

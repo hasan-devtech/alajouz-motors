@@ -7,15 +7,13 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class MaxPriceGreaterThanMinPrice implements ValidationRule
 {
-    protected mixed $minPrice;
-    public function __construct(mixed $minPrice)
+    public function __construct(private $minPrice)
     {
-        $this->minPrice = $minPrice;
     }
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (is_null($value) || is_null($this->minPrice)) {
-            return; 
+            return;
         }
         if ($value < $this->minPrice) {
             $fail('max price should be greater than min price');

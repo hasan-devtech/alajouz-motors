@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->foreignId('customer_id')->constrained();
             $table->foreignId('car_id')->constrained();
             $table->decimal('amount', 8, 2);
-            $table->timestamp('visit_date')->nullable();
-            $table->enum('status', enumValues(RequestStatusEnum::class));
+            $table->timestamp('visit_date');
+            $table->enum('status', enumValues(RequestStatusEnum::class))->default(RequestStatusEnum::Pending->value);
             $table->timestamps();
             $table->softDeletes();
         });

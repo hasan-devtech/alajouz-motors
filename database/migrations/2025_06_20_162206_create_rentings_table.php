@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->decimal('total_price', 8, 2);
-            $table->enum('status', enumValues(RequestStatusEnum::class));
+            $table->enum('status', enumValues(RequestStatusEnum::class))->default(RequestStatusEnum::Pending->value);
             $table->string('license');
             $table->timestamps();
             $table->softDeletes();

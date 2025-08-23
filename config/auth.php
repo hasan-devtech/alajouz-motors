@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\authGuardEnum;
+use App\Enums\AuthGuardEnum;
 use App\Models\Customer;
 
 return [
@@ -43,11 +43,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        authGuardEnum::Customer->value => [
+        AuthGuardEnum::Customer->value => [
             'driver' => 'sanctum',
             'provider' => 'customers'
         ],
-        authGuardEnum::User->value => [
+        AuthGuardEnum::User->value => [
             'driver' => 'sanctum',
             'provider' => 'users'
         ],

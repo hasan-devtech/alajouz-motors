@@ -8,11 +8,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class BrandModelBelongsToBrand implements ValidationRule
 {
-    protected mixed $brandId;
 
-    public function __construct(mixed $brandId)
+    public function __construct(private $brandId)
     {
-        $this->brandId = $brandId;
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void

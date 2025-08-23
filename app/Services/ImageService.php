@@ -7,14 +7,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageService
 {
-    public function storeImages($files, $model)
+    public function storeImages($files, $model, $alt = null)
     {
         foreach ($files as $file) {
             try {
+                $
                 $path = $file->store('images/cars', 'public');
                 $model->images()->create([
                     'path' => $path,
-                    'alt' => 'Selling Request Car Image',
+                    'alt' => $alt ?? 'Car image',
                 ]);
             } catch (\Throwable $e) {
                 Log::error('Failed to store image', [

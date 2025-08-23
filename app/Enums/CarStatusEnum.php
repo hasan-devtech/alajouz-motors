@@ -8,6 +8,5 @@ enum CarStatusEnum: string
     case Rented = 'rented';                
     case Booked = 'booked';                 
     case Sold = 'sold';                    
-    case PendingApproval = 'pending_approval'; 
-    case Cancelled = 'cancelled';          
+
 }

@@ -42,7 +42,11 @@ class SellingCarRequest extends FormRequest
         ];
         if ($this->isMethod('PUT')) {
             foreach ($rules as $field => $rule) {
-                $rules[$field] = 'sometimes|' . $rule;
+                if (is_array($rule)) {
+                    $rules[$field] = array_merge(['sometimes'], $rule);
+                } else {
+                    $rules[$field] = 'sometimes|' . $rule;
+                }
             }
             $rules['selling_request_id'] = [
                 'required',

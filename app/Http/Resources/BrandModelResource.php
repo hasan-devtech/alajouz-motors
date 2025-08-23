@@ -16,7 +16,7 @@ class BrandModelResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            //IS THIS IMPORTANT FOR OUR US 
+            //IS THIS IMPORTANT FOR  
             'brand_id' => $this->brand_id,
             'name' => $this->name,
             'slug' => $this->slug

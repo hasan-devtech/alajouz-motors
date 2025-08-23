@@ -20,7 +20,8 @@
         "propaganistas/laravel-phone": "^6.0",
         "rennokki/laravel-eloquent-query-cache": "^3.6",
         "solution-forest/filament-simplelightbox": "^0.0.11",
-        "spatie/laravel-permission": "^6.20"
+        "spatie/laravel-permission": "^6.20",
+        "stripe/stripe-php": "^17.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

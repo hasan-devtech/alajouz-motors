@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\VisitDateTimeAllowed;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BookingCarRequest extends FormRequest
@@ -24,8 +25,8 @@ class BookingCarRequest extends FormRequest
     {
         return [
             'car_id' => 'required',
-            'amount' => ['required','min:$minAmount' ,'integer'],
-            
+            'amount' => ['required','integer' ,'min:'. $minAmount],
+            'visit_date' => ['required','date_format:Y-m-d',new VisitDateTimeAllowed()]
         ];
     }
 }

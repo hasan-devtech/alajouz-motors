@@ -11,11 +11,19 @@ class CarService
     public function getCars(array $filters)
     {
         $perPage = resolvePerPage($filters['per_page'] ?? null);
-        // What do u think ? only available cars ?
-        $filters['status'] = CarStatusEnum::Available;
-        return Car::with(['brand', 'brandModel', 'color','images'])
-        ->filter( $filters)
-        ->paginate($perPage);
+        $filters['status'] = [CarStatusEnum::Available, CarStatusEnum::Rented];
+        return Car::with(['brand', 'brandModel', 'color', 'images', 'CarType'])
+            ->filter($filters)
+            ->paginate($perPage);
+    }
+    public function getCarDetails(int $carId)
+    {
+        $car = Car::with(['brand', 'brandModel', 'carType', 'images'])
+            ->find($carId);
+        if (!$car || !$car->isRentOrAvailable()) {
+            return false;
+        }
+        return $car;
     }
 
 }

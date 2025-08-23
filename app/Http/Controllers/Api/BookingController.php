@@ -13,4 +13,7 @@ class BookingController extends Controller
     public function __construct(private BookingService $service)
     {
     }
+    public function createBooking(BookingCarRequest $request){
+        
+    }
 }

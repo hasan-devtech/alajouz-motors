@@ -21,9 +21,12 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(BrandSeeder::class);
         $this->call(BrandModelSeeder::class);
+        $this->call(CarTypeSeeder::class);
         $this->call(ColorSeeder::class);
         $this->call(CarSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(CustomerSeeder::class);
         $this->call(SettingSeeder::class);
+        $this->call(RentingSeeder::class);
     }
 }

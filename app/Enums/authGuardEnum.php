@@ -1,7 +1,7 @@
 <?php
 namespace App\Enums;
 
-enum authGuardEnum: string
+enum AuthGuardEnum: string
 {
     case User = 'user-api';
     case Customer = 'customer-api';

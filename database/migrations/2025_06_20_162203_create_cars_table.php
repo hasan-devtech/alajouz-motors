@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\CarEngineTypeEnum;
+use App\Enums\CarListingTypeEnum;
 use App\Enums\CarStatusEnum;
 use App\Enums\CarTypeEnum;
 use Illuminate\Database\Migrations\Migration;
@@ -16,6 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('brand_id')->constrained();
             $table->foreignId('brand_model_id')->constrained();
+            $table->foreignId('car_type_id')->constrained();
             $table->foreignId('color_id')->constrained();
             $table->smallInteger('year', false, true);
             $table->decimal('distance', 8, 2);
@@ -23,7 +25,7 @@ return new class extends Migration {
             $table->enum('engine_type', enumValues(CarEngineTypeEnum::class));
             $table->decimal('price', 8, 2);
             $table->string('vin');
-            $table->enum('type', enumValues(CarTypeEnum::class));
+            $table->enum('mood', enumValues(CarListingTypeEnum::class));
             $table->enum('status', enumValues(CarStatusEnum::class));
             $table->timestamps();
             $table->softDeletes();

@@ -112,6 +112,4 @@ class AuthenticationService
         return $model::where('phone', $phone)->first();
     }
 
-
-
 }

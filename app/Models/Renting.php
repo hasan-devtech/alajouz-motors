@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RequestStatusEnum;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -43,5 +44,12 @@ class Renting extends Model
     public function car(): BelongsTo
     {
         return $this->belongsTo(Car::class);
+    }
+
+    public function getRentalDaysAttribute()
+    {
+        $start_date = Carbon::parse($this->start_date);
+        $end_date = Carbon::parse($this->end_date);
+        return $start_date->diffInDays($end_date) + 1;
     }
 }

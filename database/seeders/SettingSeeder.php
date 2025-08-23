@@ -19,9 +19,8 @@ class SettingSeeder extends Seeder
             'company_latitude' => 33.532436,
             'company_longitude' => 36.228012,
             'min_amount' => 100,
+            'min_rental_days' => 1,
             'booking_working_days' => ['saturday','sunday','monday','tuesday','wednesday','thursday'],
-            'booking_start_time' => '8:00',
-            'bokking_end_time' => '18:00'
         ];
         foreach ($settings as $key => $value) {
             Setting::create([

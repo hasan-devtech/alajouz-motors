@@ -24,7 +24,7 @@ class OTPService
         $message = "Your OTP is: " . $code;
         $isSent = $this->send($phone, $message);
         return $isSent
-            ? ['status' => true , 'message' => 'otp has been send successfully']
+            ? ['status' => true, 'message' => 'otp has been send successfully']
             : ['status' => false, 'message' => 'SMS failed', 'code' => 500];
     }
     private static function generateCode()
@@ -43,7 +43,7 @@ class OTPService
                 'Authorization' => config('services.sms.token'),
                 'Accept' => 'application/json',
             ])->post(config('services.sms.gateway_url'), [
-                        'to' => '+963943653015',
+                        'to' => "+963959871726",
                         'message' => $message,
                     ]);
             if (!$response->successful()) {

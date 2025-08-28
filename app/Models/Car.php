@@ -163,5 +163,4 @@ class Car extends Model
         ];
         return $schedule;
     }
-
 }

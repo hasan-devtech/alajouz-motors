@@ -11,7 +11,7 @@ class CustomerService
     public function handleAddFavorite($car_id, $customer)
     {
         $car = Car::find($car_id);
-        if (!$car || !$car->isRentOrAvailable()) {
+        if (!$car || !$car->visible()) {
             return [
                 'status' => false,
                 'message' => 'Car cannot be added to favorites due to its status'
@@ -45,6 +45,6 @@ class CustomerService
     {
         $perPage = resolvePerPage(request()->input('per_page') ?? null);
         $favorites = $user->favorites()->with(['brand', 'brandModel', 'color', 'images', 'carType']);
-        return CarResource::collection($favorites->paginate($perPage));
+        return CarResource::collection($favorites->paginate($perPage)->withQueryString());
     }
 }

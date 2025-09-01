@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\SellingCarRequest;
+use App\Http\Requests\UpdateSellingCarRequest;
+use App\Http\Resources\SellingRequestResource;
 use App\Services\SellingRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use function App\Helpers\paginationResponseHelper;
 use function App\Helpers\sendResponseHelper;
 
 class SellingRequestController extends Controller
@@ -24,11 +27,11 @@ class SellingRequestController extends Controller
             : sendResponseHelper(500, 'Failed to create selling request');
     }
 
-    public function edit(SellingCarRequest $request)
+    public function edit(UpdateSellingCarRequest $request)
     {
         $success = $this->service->handleEdit($request->selling_request_id, $request->user()->id, $request->validated());
         return $success
-            ? sendResponseHelper(200, 'Selling request updated successfully')
+            ? sendResponseHelper(200, 'Selling request updated successfully', SellingRequestResource::make($success))
             : sendResponseHelper(400, 'Failed to update selling request');
     }
 
@@ -45,5 +48,13 @@ class SellingRequestController extends Controller
             ? sendResponseHelper(200, 'Selling request canceled successfully')
             : sendResponseHelper(400, 'Selling request cancelled faild');
     }
+
+    public function getSellingRequests()
+    {
+        $result = $this->service->getCustomerSellingRequests(request()->user()->id);
+        return paginationResponseHelper(data: SellingRequestResource::collection($result));
+    }
+
+
 
 }

@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->decimal('distance', 8, 2);
             $table->integer('engine', false, true);
             $table->enum('engine_type', enumValues(CarEngineTypeEnum::class));
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 8, 2)->nullable();
             $table->string('vin');
             $table->enum('mood', enumValues(CarListingTypeEnum::class));
             $table->enum('status', enumValues(CarStatusEnum::class));

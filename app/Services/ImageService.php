@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ImageService
 {
@@ -11,8 +12,11 @@ class ImageService
     {
         foreach ($files as $file) {
             try {
-                $
-                $path = $file->store('images/cars', 'public');
+                $path = $file->storeAs(
+                    'images/cars',
+                    Str::uuid() . '.' . $file->getClientOriginalExtension(),
+                    'public'
+                );
                 $model->images()->create([
                     'path' => $path,
                     'alt' => $alt ?? 'Car image',
@@ -25,6 +29,18 @@ class ImageService
             }
         }
     }
+
+    public function deleteImagesByIds($ids, $model)
+    {
+        foreach ($ids as $id) {
+            $image = $model->images()->where('id', $id)->first();
+            if ($image) {
+                Storage::delete($image->path);
+                $image->delete();
+            }
+        }
+    }
+
 
     public function deleteModelImages($model)
     {

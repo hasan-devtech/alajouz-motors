@@ -46,6 +46,10 @@ class Car extends Model
         'mood' => CarListingTypeEnum::class,
         'status' => CarStatusEnum::class,
     ];
+    public function sellingRequest()
+    {
+        return $this->hasOne(SellingRequest::class);
+    }
 
     public function favorites(): BelongsToMany
     {
@@ -71,7 +75,7 @@ class Car extends Model
     {
         return $this->belongsTo(Color::class);
     }
-    public function CarType()
+    public function carType()
     {
         return $this->belongsTo(CarType::class);
     }
@@ -86,6 +90,7 @@ class Car extends Model
             ->when($filters['brand_model_id'] ?? null, fn($q, $v) => $q->where('brand_model_id', $v))
             ->when($filters['color_id'] ?? null, fn($q, $v) => $q->where('color_id', $v))
             ->when($filters['year'] ?? null, fn($q, $v) => $q->where('year', $v))
+            ->when($filters['mood'] ?? null, fn($q, $v) => $q->where('mood', $v))
             ->when($filters['min_price'] ?? null, fn($q, $v) => $q->where('price', '>=', $v))
             ->when($filters['max_price'] ?? null, fn($q, $v) => $q->where('price', '<=', $v))
             ->when($filters['engine'] ?? null, fn($q, $v) => $q->where('engine', $v))
@@ -99,22 +104,37 @@ class Car extends Model
             })
             ->when($filters['car_type_id'] ?? null, fn($q, $v) => $q->where('car_type_id', $v));
     }
-    public function isRentOrAvailable()
+    public function isVisible(): bool
     {
-        return in_array($this->status, [
-            CarStatusEnum::Available,
-            CarStatusEnum::Rented,
-        ]);
+        if (!in_array($this->status, [CarStatusEnum::Available, CarStatusEnum::Rented])) {
+            return false;
+        }
+        if (!$this->sellingRequest) {
+            return true;
+        }
+        return $this->sellingRequest->status === RequestStatusEnum::Approved;
     }
+
+    public function scopeVisible($query)
+    {
+        return $query->whereIn('status', [CarStatusEnum::Available, CarStatusEnum::Rented])
+            ->where(function ($q) {
+                $q->doesntHave('sellingRequest')
+                    ->orWhereHas('sellingRequest', function ($sq) {
+                        $sq->where('status', RequestStatusEnum::Approved);
+                    });
+            });
+    }
+    
     public function isAvailableForRent()
     {
-        return $this->mood === CarListingTypeEnum::Rent;
+        return $this->mood === CarListingTypeEnum::Rent ;
     }
 
     public function isAvailableForPeriod($startDate, $endDate)
     {
         return !$this->rentings()
-            ->where('status', 'approved')
+            ->where('status', RequestStatusEnum::Approved)
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('start_date', [$startDate, $endDate])
                     ->orWhereBetween('end_date', [$startDate, $endDate])
@@ -131,10 +151,12 @@ class Car extends Model
             ->where('status', RequestStatusEnum::Approved);
     }
 
-
     public function getAvailabilityScheduleAttribute()
     {
         $now = Carbon::now(setting('timezone'));
+        if ($this->mood !== CarListingTypeEnum::Rent) {
+            return [];
+        }
         $rentings = $this->relationLoaded('approvedRentings')
             ? $this->approvedRentings->where('end_date', '>=', $now)->sortBy('start_date')
             : $this->approvedRentings()->where('end_date', '>=', $now)->orderBy('start_date')->get();

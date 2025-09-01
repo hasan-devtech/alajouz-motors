@@ -20,14 +20,17 @@ Route::controller(AuthenticationController::class)->name('customer')->prefix("au
     Route::post('login', 'login')->name('.login');
     Route::post('verify', 'verifyRegisterCode');
     Route::post('forget-password', 'forgetPassword')->name('.forget');
+    Route::post('verify-reset', 'verifyPasswordRecoveryCode')->name('.verify-reset');
+    Route::post('reset-password', 'resetPassword')->name('.reset-password');
+    Route::post('resend-register-code', "resendRegisterCode");
     Route::delete('logout', 'logout')->middleware('auth:' . AuthGuardEnum::Customer->value)->name('.logout');
 });
 
 // Customer Rent Car Request 
-Route::controller(RentingController::class)->middleware('auth:'.AuthGuardEnum::Customer->value)->group(function () { 
-    Route::post('rent','create');
-    Route::put('rent','edit');
-    Route::get('rents','getRentingsHistory');
+Route::controller(RentingController::class)->middleware('auth:' . AuthGuardEnum::Customer->value)->group(function () {
+    Route::post('rent', 'create');
+    Route::put('rent', 'edit');
+    Route::get('rents', 'getRentingsHistory');
 });
 
 Route::controller(CustomerController::class)->middleware('auth:' . AuthGuardEnum::Customer->value)->group(function () {
@@ -48,18 +51,26 @@ Route::controller(AuthenticationController::class)->name('user')->prefix("auth/u
 Route::controller(UserActivityController::class)->prefix('user')->middleware('auth:' . AuthGuardEnum::User->value)->group(function () {
     Route::post('check-in', 'checkIn');
     Route::get('check-out', 'checkOut');
+    Route::get('profile', 'getProfile');
+    Route::get('month-work-details', 'getUserWorkHoursAndSalary');
+
 });
 Route::post('auth/resend-verification', [AuthenticationController::class, 'resendVerificationCode']);
 
 Route::controller(SellingRequestController::class)->middleware("auth:sanctum")->group(function () {
-    Route::post('create', 'create');
+    Route::post('selling-request', 'create');
+    Route::get('selling-request', 'getSellingRequests');
+    Route::post('selling-request/edit', 'edit');
+    Route::patch('selling-request/cancel', 'cancel');
 });
 
 // General Apis
-Route::get('brands', [BrandController::class, 'getBrands']);
-Route::get('models', [BrandModelController::class, 'getModels']);
-Route::get("colors", [ColorController::class, 'getColors']);
-Route::get("types", [CarTypeController::class, 'getTypes']);
-Route::get('brand/models', [BrandModelController::class, 'getModelsByBrand']);
-Route::get('cars', [CarController::class, 'getCars']);
-Route::get('car', [CarController::class, 'getCarDetails']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('brands', [BrandController::class, 'getBrands']);
+    Route::get('models', [BrandModelController::class, 'getModels']);
+    Route::get("colors", [ColorController::class, 'getColors']);
+    Route::get("types", [CarTypeController::class, 'getTypes']);
+    Route::get('brand/models', [BrandModelController::class, 'getModelsByBrand']);
+    Route::get('cars', [CarController::class, 'getCars']);
+    Route::get('car', [CarController::class, 'getCarDetails']);
+});

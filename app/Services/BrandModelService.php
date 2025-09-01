@@ -18,6 +18,7 @@ class BrandModelService
         }
         return $query
             ->select('id', 'name', 'slug', 'brand_id')
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->withQueryString();
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Renting;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Log;
 use Throwable;
 use function App\Helpers\resolvePerPage;
@@ -32,8 +33,10 @@ class RentingService
         $data['total_price'] = $car->price * $data['rental_days'];
         try {
             DB::transaction(function () use ($data) {
-                $licensePath = $data['license']->store('licenses', 'local');
-                $data['license'] = $licensePath;
+            $extension = $data['license']->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $extension;
+            $licensePath = $data['license']->storeAs('licenses', $filename, 'local');
+            $data['license'] = $licensePath;
                 Renting::create($data);
             });
             return [
@@ -71,7 +74,8 @@ class RentingService
         $perPage = resolvePerPage(request()->input('per_page') ?? null);
         return  $user->rentings()
             ->with(['car', 'car.brand', 'car.brandModel', 'car.carType'])
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
 }

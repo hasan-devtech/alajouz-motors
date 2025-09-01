@@ -36,4 +36,5 @@ class CarController extends Controller
             CarDetailsResource::make($car)
         );
     }
+
 }

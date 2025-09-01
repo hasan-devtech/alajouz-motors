@@ -26,34 +26,19 @@ class SellingCarRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'brand_id' => 'required|exists:brands,id',
-            'brand_model_id' => ['required', 'exists:brand_models,id', new BrandModelBelongsToBrand($this->input('brand_id'))],
-            'color_id' => 'required|exists:colors,id',
+        return [
+            'brand_id' => ['required', Rule::exists('brands', 'id')],
+            'brand_model_id' => ['required', Rule::exists("brand_models", 'id'), new BrandModelBelongsToBrand($this->input('brand_id'))],
+            'color_id' => ['required', Rule::exists('colors', 'id')],
+            'car_type_id' => ['required', Rule::exists("car_types", "id")],
             'year' => 'required|integer|min:1990|max:' . now()->year,
             'distance' => ['required', 'numeric', 'min:0'],
             'engine' => 'required|integer|min:0',
             'engine_type' => ['required', Rule::in(enumValues(CarEngineTypeEnum::class))],
-            'car_type' => ['required', Rule::in(enumValues(CarTypeEnum::class))],
-            'price' => 'required|numeric|min:200',
+            'price' => 'required|numeric|min:1000',
             'vin' => 'required|string|max:255',
             'car_images' => 'required|array|min:1',
-            'car_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
+            'car_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
-        if ($this->isMethod('PUT')) {
-            foreach ($rules as $field => $rule) {
-                if (is_array($rule)) {
-                    $rules[$field] = array_merge(['sometimes'], $rule);
-                } else {
-                    $rules[$field] = 'sometimes|' . $rule;
-                }
-            }
-            $rules['selling_request_id'] = [
-                'required',
-                'integer',
-                Rule::exists('selling_requests', 'id')->where('customer_id', $this->user()->id)
-            ];
-        }
-        return $rules;
     }
 }

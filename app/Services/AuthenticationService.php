@@ -89,6 +89,31 @@ class AuthenticationService
             'code' => $result['status'] ? 200 : ($result['code'] ?? 500)
         ];
     }
+    public function handleResendRegisterCode($phone)
+    {
+        $customer = Customer::where('phone', $phone)->first();
+        if (!$customer) {
+            return [
+                'status' => false,
+                'message' => 'Invalid proccess',
+                'code' => 400
+            ];
+        }
+        if ($customer->is_verified) {
+            return [
+                'status' => false,
+                'message' => 'Account already verified',
+                'code' => 400
+            ];
+        }
+        $result = $this->otpService->sendOTP($phone, OTPTypeEnum::Register);
+        return [
+            'status' => $result['status'],
+            'message' => $result['message'],
+            'code' => $result['status'] ? 200 : ($result['code'] ?? 500)
+        ];
+    }
+
 
     public function verifyOTP($phone, $code, OTPTypeEnum $type)
     {

@@ -10,7 +10,7 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\UserResource;
-use App\Models\Customer;    
+use App\Models\Customer;
 use App\Services\AuthenticationService;
 use Illuminate\Http\Request;
 
@@ -44,6 +44,16 @@ class AuthenticationController extends Controller
             $response['data'] ?? null
         );
     }
+
+    public function resendRegisterCode(Request $request)
+    {
+        $request->validate([
+            'phone' => ['required', 'regex:/^((\+963|0)?9\d{8})$/', 'string', 'max:15'],
+        ]);
+        $response = $this->service->handleResendRegisterCode($request->phone);
+        return sendResponseHelper($response['code'], $response['message']);
+    }
+
 
 
     public function logout(Request $request)
@@ -106,7 +116,7 @@ class AuthenticationController extends Controller
         if (!$response['status']) {
             return sendResponseHelper($response['code'] ?? 400, $response['message']);
         }
-        $response['user']->update(['password'=>$request->new_password]);
+        $response['user']->update(['password' => $request->new_password]);
         return sendResponseHelper(200, 'Password reset successfully');
     }
 }

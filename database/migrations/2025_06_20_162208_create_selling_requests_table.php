@@ -13,18 +13,10 @@ return new class extends Migration {
 
         Schema::create('selling_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('brand_id')->constrained();
-            $table->foreignId('brand_model_id')->constrained();
-            $table->foreignId('customer_id')->constrained();
-            $table->foreignId('color_id')->constrained();
-            $table->smallInteger('year', false, true);
-            $table->decimal('distance', 8, 2);
-            $table->integer('engine', false, true);
-            $table->enum('engine_type', enumValues(CarEngineTypeEnum::class));
+            $table->foreignId('car_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->decimal('price', 8, 2);
-            $table->decimal('price_after_commission', 8, 2)->nullable();
-            $table->string('vin');
-            $table->enum('status', enumValues(RequestStatusEnum::class))->default(RequestStatusEnum::Pending->value);
+            $table->enum('status', enumValues(RequestStatusEnum::class))->default(RequestStatusEnum::Pending);
             $table->timestamps();
             $table->softDeletes();
         });

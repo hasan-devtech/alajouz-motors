@@ -20,6 +20,7 @@ class SettingSeeder extends Seeder
             'company_longitude' => 36.228012,
             'min_amount' => 100,
             'min_rental_days' => 1,
+            'monthly_expected_hours' => 200,
             'booking_working_days' => ['saturday','sunday','monday','tuesday','wednesday','thursday'],
         ];
         foreach ($settings as $key => $value) {

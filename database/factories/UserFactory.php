@@ -24,7 +24,6 @@ class UserFactory extends Factory
                 UserStatusEnum::Disabled->value,
             ]),
             'password' => 'h123456789H',
-            'remember_token' => Str::random(10),
         ];
     }
 
